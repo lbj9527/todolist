@@ -20,6 +20,13 @@ const routes = [
     //按需引入
     //如果没有访问/about 就不会加载这个组件 节约性能
     component: () => import('../views/AboutView.vue')
+  },
+  {
+    path: '/detail',
+    name: 'Detail',
+    //按需引入
+    //如果没有访问/about 就不会加载这个组件 节约性能
+    component: () => import('../views/Detail.vue')
   }
 ]
 

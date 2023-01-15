@@ -1,14 +1,8 @@
 <template>
   <div>
-    <nav-header></nav-header>
-    <nav-main></nav-main>
-    <nav-footer></nav-footer>
-    <!-- <div>
-      {{ list }}
-    </div> -->
-  </div>
-  <div>
-    <button @click="goto">跳转路由</button>
+    <nav-header @add='add'></nav-header>
+    <nav-main :list="list" @del="del"></nav-main>
+    <nav-footer :list="list" @clear="clear"></nav-footer>
   </div>
 
 </template>
@@ -17,9 +11,8 @@
 import NavHeader from '@/components/navHeader/NavHeader.vue'
 import NavMain from '@/components/navMain/NavMain.vue'
 import NavFooter from '@/components/navFooter/NavFooter.vue'
-import { computed, defineComponent,ref} from 'vue'
+import {defineComponent, ref, computed} from 'vue'
 import { useStore } from 'vuex'
-import { useRouter, useRoute} from 'vue-router'
 
 export default defineComponent ({
   name: 'HomeView',
@@ -29,28 +22,50 @@ export default defineComponent ({
     NavFooter
   },
   setup() {
-    //全局路由对象
-    let router = useRouter()
-    //当前路由对象
-    let route = useRoute()
-    //query传递的参数都是字符串的类型
-    console.log(route.params)
-    let goto = () => {
-      //跳转路由
-      //push函数里面可以传入跳转的路径
-      //back: 回退到上一页
-      //forward: 去到下一页
-      //go(整数) 整数代表前进 负数代表后退
-      router.push('/about')
+    let store = useStore()
+    let list = computed(() => {
+      return store.state.list
+    })
+    let value = ref('')
+    //添加任务
+    let add = (val) => {
+      console.log(val)
+      value.value = val
+      //先判断有没有存在的任务 如果任务存在 不能重复添加
+      let flag = true
+      list.value.map(item => {
+        if (item.title === value.value) {
+          //有重复的任务
+          flag = false
+          alert('任务存在')
+        }
+      }) 
+      //调用mutation的方法
+      if(flag) {
+        store.commit('addTodo', {
+        title: value.value,
+        complete: 'false'
+      })
+      flag = true
+      }
     }
-    // let store = useStore()
-    // let list = computed( () => {
-    //   return store.state.list
-    // })
+    //删除任务
+    let del = (val) => {
+      store.commit('delTodo',val)
+    }
+    //删除已完成的
+    let clear = (val) => {
+      store.commit('clear', val)
+
+    }
     return {
-      // list
-      goto
+      add,
+      value,
+      list,
+      del,
+      clear
     }
+    
   }
 
   })

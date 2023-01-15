@@ -1,9 +1,16 @@
 <template>
-    <div v-for="(item, index) in list" :key="index">
-        <div class="item">
-            <input type="checkbox" v-model="item.complete">
-            {{ item.title }}
-            <button class="del" @click="del(item, index)">删除</button>
+    <div>
+        <div v-if="list.length > 0">
+            <div v-for="(item, index) in list" :key="index">
+                <div class="item">
+                    <input type="checkbox" v-model="item.complete">
+                    {{ item.title }}
+                    <button class="del" @click="del(item, index)">删除</button>
+                </div>
+            </div>
+        </div>
+        <div v-else>
+            暂无任务
         </div>
     </div>
 </template>
@@ -12,27 +19,21 @@
 import {defineComponent, ref} from 'vue'
 export default defineComponent ({
     name: "NavMain",
-    setup() {
-        let list = ref([
-            {
-                title: '吃饭',
-                complete: 'false'
-            },
-            {
-                title: '睡觉',
-                complete: 'false'
-            },
-            {
-                title: '打游戏',
-                complete: 'false'
-            }
-        ])
+    props: {
+        list: {
+            type: Array,
+            required: true
+        }
+    },
+    emits: ['del'],    //emits数组用来放分发事件的属性名字
+    setup(props, ctx) {
+        //删除任务
         let del = (item, index) => {
-            console.log(item)
-            console.log(index)
+            // console.log(item)
+            // console.log(index)
+            ctx.emit('del',index)
         }
         return {
-            list,
             del
         }
     }

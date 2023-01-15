@@ -14,7 +14,7 @@ export default createStore({
       },
       {
           title: '打游戏',
-          complete: 'true'
+          complete: 'false'
       }
   ]
   },

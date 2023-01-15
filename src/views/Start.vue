@@ -6,16 +6,27 @@
 </template>
 
 <script>
-import { defineComponent, ref} from 'vue';
+import { defineComponent, ref, onMounted, onUnmounted} from 'vue';
 import { useRouter } from 'vue-router';
 export default defineComponent ({
   name: 'Start',
   setup() { //组件创建的过程
     let router = useRouter()
     let name = ref('jack')
-    let num = ref(10)
+    let num = ref(10) 
     let obj = ref({
       msg: "start"
+    })
+    onMounted(() => {
+      //组件挂载的过程
+      //数据DOM...
+      //与后台交互 发请求
+      //数据初始化操作 接收路由的参数
+    })
+    onUnmounted(() => {
+      //组件卸载时的生命周期
+      //清除定时器 清除闭包函数
+      console.log("unload conponnent")
     })
     let start = () => {
       //push 如果是传的对象的形式 就可以传递参数
@@ -27,16 +38,16 @@ export default defineComponent ({
       router.push({
         //path: '/home',
         name: 'Home',
-        // query: {
+        query: {
+          name: name.value,
+          num: num.value,
+          obj: JSON.stringify(obj.value)
+        }
+        // params: {
         //   name: name.value,
         //   num: num.value,
         //   obj: JSON.stringify(obj)
         // }
-        params: {
-          name: name.value,
-          num: num.value,
-          obj: JSON.stringify(obj)
-        }
       })
     }
     return {
